@@ -16,7 +16,6 @@ module RushHour
 
     get "/sources/:identifier" do |identifier|
       @info = Processor.controller_info(identifier)
-
       if Client.find_by(identifier: identifier).nil?
         @message = "Identifier #{identifier} does not exist!"
         erb :error
@@ -53,15 +52,11 @@ module RushHour
 
     post "/sources" do
       data = Processor.clean_data(params)
-      response = Response.process_client(Client.new(data), params[:identifier])
-      status response[:status]
-      body response[:body]
+      status, body = Response.process_client(Client.new(data), params[:identifier])
     end
 
     post "/sources/:IDENTIFIER/data" do |identifier|
-      response = Response.process_data(params, identifier)
-      status response[:status]
-      body response[:body]
+      status, body = Response.process_data(params, identifier)
     end
 
     get "/redirect" do

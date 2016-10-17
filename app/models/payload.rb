@@ -69,6 +69,14 @@ class Payload < ActiveRecord::Base
     end
   end
 
+  def self.agent_breakdown(category)
+    grouped_values = group(:agent_id).count
+    grouped_values.reduce({}) do |hash, (key, value)|
+      hash[Agent.find(key).send(category)] = value
+      hash
+    end
+  end
+
   def self.resolutions_breakdown
     grouped_res = group(:resolution_id).count
     grouped_res.reduce({}) do  |hash, (key, value)|
