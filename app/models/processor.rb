@@ -15,40 +15,32 @@ extend self
 
   def params_cleaner(params)
     user_agent, referredby, url = params_parser(params)
-
+    params = json_parser(params)
     {
-     requested_at: json_parser(params)['requestedAt'],
-     responded_in: json_parser(params)['respondedIn'],
-     referred_by_id: ReferredBy.find_or_create_by(root_url: referredby.host, path: referredby.path).id,
-     request_type_id: RequestType.find_or_create_by(http_verb: json_parser(params)['requestType']).id,
-     event_id: Event.find_or_create_by(event_name: json_parser(params)['eventName']).id,
-     agent_id: Agent.find_or_create_by(browser: user_agent.browser, operating_system: user_agent.platform).id,
-     resolution_id: Resolution.find_or_create_by(height: json_parser(params)['resolutionHeight'], width: json_parser(params)['resolutionWidth']).id,
-     ip_id: Ip.find_or_create_by(address: json_parser(params)['ip']).id,
-     url_id: Url.find_or_create_by(root_url: url.host, path: url.path).id
+       requested_at: params['requestedAt'],
+       responded_in: params['respondedIn'],
+       referred_by: ReferredBy.find_by(root_url: referredby.host, path: referredby.path),
+       request_type: RequestType.find_by(http_verb: params['requestType']),
+       event: Event.find_by(event_name: params['eventName']),
+       agent: Agent.find_by(browser: user_agent.browser, operating_system: user_agent.platform),
+       resolution: Resolution.find_by(height: params['resolutionHeight'], width: params['resolutionWidth']),
+       ip: Ip.find_by(address: params['ip']),
+       url: Url.find_by(root_url: url.host, path: url.path)
     }
   end
+
 
   def does_payload_exist?(params, client)
     user_agent, referredby, url = params_parser(params)
 
-    Payload.find_by(
-       requested_at: json_parser(params)['requestedAt'],
-       responded_in: json_parser(params)['respondedIn'],
-       referred_by: ReferredBy.find_by(root_url: referredby.host, path: referredby.path),
-       request_type: RequestType.find_by(http_verb: json_parser(params)['requestType']),
-       event: Event.find_by(event_name: json_parser(params)['eventName']),
-       agent: Agent.find_by(browser: user_agent.browser, operating_system: user_agent.platform),
-       resolution: Resolution.find_by(height: json_parser(params)['resolutionHeight'], width: json_parser(params)['resolutionWidth']),
-       ip: Ip.find_by(address: json_parser(params)['ip']),
-       url: Url.find_by(root_url: url.host, path: url.path)
-     )
+    Payload.find_by(params_cleaner(params))
   end
 
   def params_parser(params)
-    user_agent = UserAgent.parse(json_parser(params)['userAgent'])
-    referredby = URI.parse(json_parser(params)['referredBy'])
-    url = URI.parse(json_parser(params)['url'])
+    params = json_parser(params)
+    user_agent = UserAgent.parse(params)['userAgent']
+    referredby = URI.parse(params)['referredBy']
+    url = URI.parse(params)['url']
 
     [user_agent, referredby, url]
   end
