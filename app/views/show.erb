@@ -8,8 +8,8 @@
         <a href = '#' class='dropdown-toggle' data-toggle='dropdown'>Events
         <span class="caret"></span></a>
         <ul class='dropdown-menu'>
-          <% @events.each do |event| %>
-            <li><a href="/sources/<%= @client.identifier %>/events/<%= event %>"><%= event %></a></li>
+          <% @info[:events].each do |event| %>
+            <li><a href="/sources/<%= @info[:client].identifier %>/events/<%= event %>"><%= event %></a></li>
           <% end %>
         </ul>
       </li>
@@ -29,7 +29,7 @@
   </div>
 </div>
 
-<h1 class="title"> <%= @client.identifier %></h1>
+<h1 class="title"> <%= @info[:client].identifier %></h1>
 
 <table class="table-center">
   <caption class="back"><a href="/"><<</a></caption>
@@ -39,32 +39,32 @@
   </tr>
   <tr>
     <td>Average Response Time</td>
-    <td class="avg-response"><%= @client.average_response_time %></td>
+    <td class="avg-response"><%= @info[:client].average_response_time %></td>
   </tr>
   <tr>
     <td>Max Response Time</td>
-    <td class="max-response"><%= @client.max_response_time %></td>
+    <td class="max-response"><%= @info[:client].max_response_time %></td>
   </tr>
   <tr>
     <td>Min Response Time</td>
-    <td class="min-response"><%= @client.min_response_time %></td>
+    <td class="min-response"><%= @info[:client].min_response_time %></td>
   </tr>
   <tr>
     <td>Most Frequent Request Type</td>
-    <td class="most-frequent"><%= @client.most_frequent_request_type %></td>
+    <td class="most-frequent"><%= @info[:client].most_frequent_request_type %></td>
   </tr>
   <tr>
     <td>List of Http Verbs</td>
-    <td class="all-verbs"><%= @client.all_request_types.join(", ") %></td>
+    <td class="all-verbs"><%= @info[:client].all_request_types.join(", ") %></td>
   </tr>
   <tr>
     <td>Urls from Most Requested to Least</td>
     <td>
-    <% @client.urls_descending.each do |urlpath| %>
+    <% @info[:client].urls_descending.each do |urlpath| %>
 
       <table class="mini-table">
         <tr>
-          <td class="urls"><a href="/sources/<%=@client.identifier%>/urls/<%=urlpath.split('/')[-1]%>"><%=urlpath%></a></td>
+          <td class="urls"><a href="/sources/<%=@info[:client].identifier%>/urls/<%=urlpath.split('/')[-1]%>"><%=urlpath%></a></td>
         </tr>
       </table>
     <% end %>
@@ -72,16 +72,16 @@
   </tr>
   <tr>
     <td>Web Browswer Breakdown</td>
-    <td class="browser"><%= @client.browser_breakdown.to_a.flatten.join(": ") %></td>
+    <td class="browser"><%= @info[:client].browser_breakdown.to_a.flatten.join(": ") %></td>
   </tr>
   <tr>
     <td>Operating System Breakdown </td>
-    <td class="os"><%= @client.os_breakdown.to_a.flatten.join(": ") %></td>
+    <td class="os"><%= @info[:client].os_breakdown.to_a.flatten.join(": ") %></td>
   </tr>
   <tr>
     <td>Screen Resolution </td>
     <td>
-      <% @client.resolutions_breakdown.each do |rez| %>
+      <% @info[:client].resolutions_breakdown.each do |rez| %>
         <table class="mini-table">
           <tr><th>Height</th><th>Width</th><th>Count</th></tr>
           <tr>

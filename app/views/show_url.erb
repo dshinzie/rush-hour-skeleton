@@ -8,8 +8,8 @@
         <a href = '#' class='dropdown-toggle' data-toggle='dropdown'>Events
         <span class="caret"></span></a>
         <ul class='dropdown-menu'>
-          <% @events.each do |event| %>
-            <li><a href="/sources/<%= @client.identifier %>/events/<%= event %>"><%= event %></a></li>
+          <% @info[:events].each do |event| %>
+            <li><a href="/sources/<%= @info[:client].identifier %>/events/<%= event %>"><%= event %></a></li>
           <% end %>
         </ul>
       </li>
@@ -29,38 +29,38 @@
   </div>
 </div>
 
-<h1 class="title"> <%= @url.root_url + @url.path %> </h1>
+<h1 class="title"> <%= @info[:url].root_url + @info[:url].path %> </h1>
 
 <table class="table-center">
-  <caption class="back"><a href="/sources/<%= @client.identifier %>"><<</a></caption>
+  <caption class="back"><a href="/sources/<%= @info[:client].identifier %>"><<</a></caption>
   <tr>
     <th>Statistic</th>
     <th>Value</th>
   </tr>
   <tr>
     <td>Max Response Time</td>
-    <td class="max-response"><%= @url.max_response_time %></td>
+    <td class="max-response"><%= @info[:url].max_response_time %></td>
   </tr>
   <tr>
     <td>Min Response Time</td>
-    <td class="min-response"><%= @url.min_response_time %></td>
+    <td class="min-response"><%= @info[:url].min_response_time %></td>
   </tr>
   <tr>
     <td>Response Times</td>
-    <td class="all-response"><%= @url.response_times_desc.join(", ") %></td>
+    <td class="all-response"><%= @info[:url].response_times_desc.join(", ") %></td>
   </tr>
   <tr>
     <td>Average Response Time</td>
-    <td class="avg-response"><%= @url.average_response_time %></td>
+    <td class="avg-response"><%= @info[:url].average_response_time %></td>
   </tr>
   <tr>
     <td>List of Http Verbs</td>
-    <td class="all-verbs"><%= @url.all_http_verbs.join(", ") %></td>
+    <td class="all-verbs"><%= @info[:url].all_http_verbs.join(", ") %></td>
   </tr>
   <tr>
     <td>Top Three Referrers</td>
     <td>
-      <% @url.top_three_referrals.each do |r| %>
+      <% @info[:url].top_three_referrals.each do |r| %>
       <table class="mini-table">
         <tr><td><%=r%></td></tr>
       </table>
@@ -69,7 +69,7 @@
   </tr>
   <tr>
     <td> Top Three Agents </td>
-    <td class="agents"><%= @url.top_three_agents.join(", ")%></td>
+    <td class="agents"><%= @info[:url].top_three_agents.join(", ")%></td>
   </tr>
 
 </table>

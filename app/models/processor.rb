@@ -78,4 +78,20 @@ extend self
     date_hash.merge(hours_hash).sort.to_h
   end
 
+  def controller_info(identifier, relativepath=nil, eventname=nil )
+    client = get_client_stats(identifier)
+    events = get_client_events(client) if !client.nil?
+    url = get_url_stats('/' + relativepath) if !relativepath.nil?
+    data = get_event_stats(client, eventname) if !eventname.nil?
+    total = data.values.reduce(:+) if !data.nil?
+    {
+      client: client,
+      events: events, 
+      url:  url,
+      eventname: eventname,
+      data: data,
+      total: total
+    }
+  end
+
 end

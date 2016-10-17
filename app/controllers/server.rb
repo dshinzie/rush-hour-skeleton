@@ -15,8 +15,7 @@ module RushHour
     end
 
     get "/sources/:identifier" do |identifier|
-      @client = get_client_stats(identifier)
-      @events = get_client_events(@client) if !@client.nil?
+      @info = Processor.controller_info(identifier)
 
       if Client.find_by(identifier: identifier).nil?
         @message = "Identifier #{identifier} does not exist!"
@@ -30,9 +29,7 @@ module RushHour
     end
 
     get "/sources/:IDENTIFIER/urls/:RELATIVEPATH" do |identifier, relativepath|
-      @url = get_url_stats("/"+relativepath)
-      @client = get_client_stats(identifier)
-      @events = get_client_events(@client)
+      @info = Processor.controller_info(identifier, relativepath)
 
       if Url.find_by(path: "/#{relativepath}").nil?
         @message = "Path #{relativepath} does not exist!"
@@ -43,11 +40,7 @@ module RushHour
     end
 
     get "/sources/:IDENTIFIER/events/:EVENTNAME" do |identifier, eventname|
-      @eventname = eventname
-      @client = Client.find_by(identifier: identifier)
-      @events = get_client_events(@client)
-      @data = get_event_stats(@client, eventname)
-      @total = @data.values.reduce(:+)
+      @info = Processor.controller_info(identifier, nil, eventname)
 
       if Payload.find_by(event: Event.find_by(event_name: eventname)).nil?
         @message = "Event #{eventname} does not exist!"
@@ -59,14 +52,14 @@ module RushHour
     end
 
     post "/sources" do
-      data = clean_data(params)
-      response = process_client(Client.new(data), params[:identifier])
+      data = Processor.clean_data(params)
+      response = Response.process_client(Client.new(data), params[:identifier])
       status response[:status]
       body response[:body]
     end
 
     post "/sources/:IDENTIFIER/data" do |identifier|
-      response = process_data(params, identifier)
+      response = Response.process_data(params, identifier)
       status response[:status]
       body response[:body]
     end

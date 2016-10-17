@@ -8,8 +8,8 @@
         <a href = '#' class='dropdown-toggle' data-toggle='dropdown'>Events
         <span class="caret"></span></a>
         <ul class='dropdown-menu'>
-          <% @events.each do |event| %>
-            <li><a href="/sources/<%= @client.identifier %>/events/<%= event %>"><%= event %></a></li>
+          <% @info[:events].each do |event| %>
+            <li><a href="/sources/<%= @info[:client].identifier %>/events/<%= event %>"><%= event %></a></li>
           <% end %>
         </ul>
       </li>
@@ -30,14 +30,14 @@
 </div>
 
 <div class="event">
-<h1> Event: <%= @eventname %> </h1>
+<h1> Event: <%= @info[:eventname] %> </h1>
 <table class="table-center">
-  <caption class="back"><a href="/sources/<%= @client.identifier%>"><<</a></caption>
+  <caption class="back"><a href="/sources/<%= @info[:client].identifier%>"><<</a></caption>
   <tr>
     <th>Hour (Military)</th>
     <th>Frequency</th>
   </tr>
-  <% @data.each do |key, value|%>
+  <% @info[:data].each do |key, value|%>
   <tr>
     <td><%=key%></td>
     <td><%=value%></td>
@@ -45,7 +45,7 @@
   <% end %>
   <tr>
     <td>Total</td>
-    <td><%= @total %></td>
+    <td><%= @info[:total] %></td>
   </tr>
 </table>
 </div>
